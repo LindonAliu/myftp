@@ -1,0 +1,119 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/laliu/Delivery/epitech/my_starterpack/lib/my'
+mkdir -p ../../include
+cp include/* ../../include
+printf "\033[0;33mheader copied to ../../include\n\033[0;37m"
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/flags_freef.c -o obj/flags_freef.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/flags_printf.c -o obj/flags_printf.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_arrdup.c -o obj/my_arrdup.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_instr.c -o obj/my_char_instr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_isalpha.c -o obj/my_char_isalpha.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_isalphanum.c -o obj/my_char_isalphanum.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_islower.c -o obj/my_char_islower.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_isnum.c -o obj/my_char_isnum.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_isprintable.c -o obj/my_char_isprintable.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_char_isupper.c -o obj/my_char_isupper.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_file_in_2d_char_array.c -o obj/my_file_in_2d_char_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_file_in_str.c -o obj/my_file_in_str.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_free_array.c -o obj/my_free_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_freef.c -o obj/my_freef.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_get_first_line_file.c -o obj/my_get_first_line_file.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_get_line_tab.c -o obj/my_get_line_tab.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_getnbr.c -o obj/my_getnbr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_int_to_str.c -o obj/my_int_to_str.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_len_array.c -o obj/my_len_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_memcpy.c -o obj/my_memcpy.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_opt_parser.c -o obj/my_opt_parser.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_printf.c -o obj/my_printf.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_put_nbr.c -o obj/my_put_nbr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_putchar.c -o obj/my_putchar.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_puterr.c -o obj/my_puterr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_putnchar.c -o obj/my_putnchar.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_putstr.c -o obj/my_putstr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_replace_in_tab.c -o obj/my_replace_in_tab.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_revstr.c -o obj/my_revstr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_show_word_array.c -o obj/my_show_word_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_sort_int_array.c -o obj/my_sort_int_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_str_isalpha.c -o obj/my_str_isalpha.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_str_islower.c -o obj/my_str_islower.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_str_isnum.c -o obj/my_str_isnum.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_str_isprintable.c -o obj/my_str_isprintable.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_str_isupper.c -o obj/my_str_isupper.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_str_to_word_array.c -o obj/my_str_to_word_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strcat.c -o obj/my_strcat.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strcat_in_array.c -o obj/my_strcat_in_array.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strcmp.c -o obj/my_strcmp.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strcpy.c -o obj/my_strcpy.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strdup.c -o obj/my_strdup.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strlen.c -o obj/my_strlen.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strlowcase.c -o obj/my_strlowcase.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strncat.c -o obj/my_strncat.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strncmp.c -o obj/my_strncmp.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strncpy.c -o obj/my_strncpy.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strstr.c -o obj/my_strstr.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strtok.c -o obj/my_strtok.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_strupcase.c -o obj/my_strupcase.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_stwa_separator.c -o obj/my_stwa_separator.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_swap.c -o obj/my_swap.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/my_write_in_file.c -o obj/my_write_in_file.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/sum_numbers.c -o obj/sum_numbers.o
+mkdir -p obj
+gcc -Wall -Wextra -iquote include -c sources/sum_strings_length.c -o obj/sum_strings_length.o
+ar rc ../libmy.a obj/flags_freef.o obj/flags_printf.o obj/my_arrdup.o obj/my_char_instr.o obj/my_char_isalpha.o obj/my_char_isalphanum.o obj/my_char_islower.o obj/my_char_isnum.o obj/my_char_isprintable.o obj/my_char_isupper.o obj/my_file_in_2d_char_array.o obj/my_file_in_str.o obj/my_free_array.o obj/my_freef.o obj/my_get_first_line_file.o obj/my_get_line_tab.o obj/my_getnbr.o obj/my_int_to_str.o obj/my_len_array.o obj/my_memcpy.o obj/my_opt_parser.o obj/my_printf.o obj/my_put_nbr.o obj/my_putchar.o obj/my_puterr.o obj/my_putnchar.o obj/my_putstr.o obj/my_replace_in_tab.o obj/my_revstr.o obj/my_show_word_array.o obj/my_sort_int_array.o obj/my_str_isalpha.o obj/my_str_islower.o obj/my_str_isnum.o obj/my_str_isprintable.o obj/my_str_isupper.o obj/my_str_to_word_array.o obj/my_strcat.o obj/my_strcat_in_array.o obj/my_strcmp.o obj/my_strcpy.o obj/my_strdup.o obj/my_strlen.o obj/my_strlowcase.o obj/my_strncat.o obj/my_strncmp.o obj/my_strncpy.o obj/my_strstr.o obj/my_strtok.o obj/my_strupcase.o obj/my_stwa_separator.o obj/my_swap.o obj/my_write_in_file.o obj/sum_numbers.o obj/sum_strings_length.o
+printf "\033[0;32mlibrary built\n\033[0;37m"
+make: Leaving directory '/home/laliu/Delivery/epitech/my_starterpack/lib/my'
+ 
