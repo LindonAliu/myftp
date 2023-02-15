@@ -53,7 +53,7 @@ char **my_arrdup(const char **array);
 
 /**
  * @brief Remove a old char in the string array and add a new_element.
- * 
+ *
  * @param tab The string array.
  * @param old_element The old element to remove.
  * @param new_element The new element to add.
@@ -64,7 +64,7 @@ int my_replace_in_tab(char **tab, char old_element, char new_element);
 
 /**
  * @brief Get the line number of to the first occurrence of the string to find.
- * 
+ *
  * @param array The string array.
  * @param to_find The string to find.
  * @return Return the line number or -1 if the string was not found.

@@ -21,7 +21,7 @@ size_t my_strlen(const char *str);
 /**
  * @brief Converts the initial portion of the string pointed to by nptr to int.
  * @param nptr The string to test.
- * @return The converted value or 0 on error. 
+ * @return The converted value or 0 on error.
  */
 int my_getnbr(const char *nptr);
 
@@ -192,8 +192,8 @@ char *my_strstr(const char *haystack, const char *needle);
 
 /**
  * @brief Concatenate two strings
- * @param dest The destination string. 
- * @param src The source string. 
+ * @param dest The destination string.
+ * @param src The source string.
  * @param n The number of bytes to copy.
  * @return Return the destination string.
  */

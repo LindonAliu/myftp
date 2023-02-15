@@ -15,7 +15,7 @@ size_t my_strlen(const char *str);
 char *my_strstr(const char *haystack, const char *needle)
 {
     while (*haystack != '\0') {
-        if (*haystack == *needle && 
+        if (*haystack == *needle &&
             my_strncmp(haystack, needle, my_strlen(needle)) == 0)
             break;
         haystack++;

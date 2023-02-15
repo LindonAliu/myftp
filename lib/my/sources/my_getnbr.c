@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2021
 ** my_getnbr
 ** File description:
-** The converted value or 0 on error. 
+** The converted value or 0 on error.
 */
 
 int my_getnbr(const char *str)

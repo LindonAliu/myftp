@@ -1,8 +1,8 @@
 ##
-## EPITECH PROJECT, 2021
-## libmy
+## EPITECH PROJECT, 2023
+## Makefile
 ## File description:
-## Build libmy
+## FreeKOSOVO
 ##
 
 NAME		=	../libmy.a

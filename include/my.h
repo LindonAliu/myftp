@@ -11,6 +11,8 @@
     #define ATOD(x) (x - '0')
     #define DTOA(x) (x + '0')
     #define UNUSED __attribute__((unused))
+    #define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 
 /**
  * @brief Swap two int.
@@ -30,7 +32,7 @@ int sum_strings_length(int n, ...);
 /**
  * @brief Adding all the numbers
  * @param n The number of arguments.
- * @param ... 
+ * @param ...
  * @return Return the sum of all the numbers.
  */
 int sum_numbers(int n, ...);

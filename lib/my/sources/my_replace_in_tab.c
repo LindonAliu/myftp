@@ -7,7 +7,8 @@
 
 #include <stddef.h>
 
-static char **replace_char(char **tab, char old_element, char new_element, int i)
+static char **replace_char(char **tab, char old_element, char new_element,
+    int i)
 {
     for (int j = 0; tab[i][j] != '\0'; j++) {
         if (tab[i][j] == old_element)
