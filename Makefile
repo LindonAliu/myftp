@@ -5,7 +5,11 @@
 ## FreeKOSOVO
 ##
 
-SRC_ALL		=
+SRC_ALL		=	handle_list.c		\
+				client.c			\
+				my_ftp.c			\
+				server.c			\
+				error_handling.c	\
 
 SRC_NT		=	main.c
 
