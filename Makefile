@@ -5,12 +5,25 @@
 ## FreeKOSOVO
 ##
 
-SRC_ALL		=	client.c			\
+SRC_ALL		= 	commands/cdup.c		\
+				commands/cwd.c		\
+				commands/dele.c		\
+				commands/help.c		\
+				commands/list.c		\
+				commands/noop.c		\
+				commands/pass.c		\
+				commands/pasv.c		\
+				commands/port.c		\
+				commands/pwd.c		\
+				commands/quit.c		\
+				commands/retr.c		\
+				commands/stor.c		\
+				commands/user.c		\
+				client.c			\
 				my_ftp.c			\
 				server.c			\
 				error_handling.c	\
-				commands.c			\
-				buffer_handling.c	\
+				commands_handling.c	\
 				manage_clients.c	\
 
 SRC_NT		=	main.c
@@ -18,12 +31,25 @@ SRC_NT		=	main.c
 CC			:=	gcc
 
 SRC_TEST	=	tests/* 	\
+				sources/commands/cdup.c		\
+				sources/commands/cwd.c		\
+				sources/commands/dele.c		\
+				sources/commands/help.c		\
+				sources/commands/list.c		\
+				sources/commands/noop.c		\
+				sources/commands/pass.c		\
+				sources/commands/pasv.c		\
+				sources/commands/port.c		\
+				sources/commands/pwd.c		\
+				sources/commands/quit.c		\
+				sources/commands/retr.c		\
+				sources/commands/stor.c		\
+				sources/commands/user.c		\
 				sources/client.c			\
 				sources/my_ftp.c			\
 				sources/server.c			\
 				sources/error_handling.c	\
-				sources/commands.c			\
-				sources/buffer_handling.c	\
+				sources/commands_handling.c	\
 				sources/manage_clients.c	\
 
 SRC_EXEC	=	$(SRC_ALL) $(SRC_NT)

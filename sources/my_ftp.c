@@ -61,11 +61,11 @@ static int handle_ftp(struct server *server)
 int my_ftp(const char *port, const char *path)
 {
     struct server *server = create_server(atoi(port), path);
+    int ret = 0;
 
     if (!server)
         return -1;
-    if (handle_ftp(server) < 0)
-        return -1;
+    ret = handle_ftp(server);
     destroy_server(server);
-    return 0;
+    return ret;
 }

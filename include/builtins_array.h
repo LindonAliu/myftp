@@ -8,38 +8,45 @@
 #ifndef BUILTINS_ARRAY_H_
     #define BUILTINS_ARRAY_H_
 
-    #include "my_ftp.h"
+    #include "client.h"
 
-// int user(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int pass(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int cwd(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int cdup(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int quit(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int dele(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int pwd(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int pasv(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int port(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int help(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int noop(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int retr(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int stor(char **cmd, int cfd, int *connected, struct list_fd **list);
-// int list(char **cmd, int cfd, int *connected, struct list_fd **list);
+struct builtin {
+    char *name;
+    int (*func)(const char **cmd, struct client **client, int index);
+};
 
-// static int (*builtins_array[]) (char **, int, int *, struct list_fd **) = {
-//     user,
-//     pass,
-//     cwd,
-//     quit,
-//     cdup,
-//     dele,
-//     pwd,
-//     pasv,
-//     port,
-//     help,
-//     noop,
-//     retr,
-//     stor,
-//     list
-// };
+int user(const char **cmd, struct client **client, int index);
+int pass(const char **cmd, struct client **client, int index);
+int cwd(const char **cmd, struct client **client, int index);
+int cdup(const char **cmd, struct client **client, int index);
+int quit(const char **cmd, struct client **client, int index);
+int dele(const char **cmd, struct client **client, int index);
+int pwd(const char **cmd, struct client **client, int index);
+int pasv(const char **cmd, struct client **client, int index);
+int port(const char **cmd, struct client **client, int index);
+int help(const char **cmd, struct client **client, int index);
+int noop(const char **cmd, struct client **client, int index);
+int retr(const char **cmd, struct client **client, int index);
+int stor(const char **cmd, struct client **client, int index);
+int list(const char **cmd, struct client **client, int index);
+
+static const int BUILTINS_ARRAY_SIZE = 14;
+
+static const struct builtin builtins_array[] = {
+    {"USER", &user},
+    {"PASS", &pass},
+    {"CWD", &cwd},
+    {"CDUP", &cdup},
+    {"QUIT", &quit},
+    {"DELE", &dele},
+    {"PWD", &pwd},
+    {"PASV", &pasv},
+    {"PORT", &port},
+    {"HELP", &help},
+    {"NOOP", &noop},
+    {"RETR", &retr},
+    {"STOR", &stor},
+    {"LIST", &list},
+};
 
 #endif /* !BUILTINS_ARRAY_H_ */

@@ -9,14 +9,16 @@
     #define CLIENT_H_
 
     #include <sys/select.h>
-
+    #include <stdio.h> // printf
 struct client {
     char *buffer;
     int cfd;
+    int connected;
 };
 
 void refresh_client(struct client **clients, fd_set *fds, int *sfd);
 void destroy_client(struct client *client);
+void destroy_clients(struct client **clients);
 void add_client(struct client **clients, int cfd, fd_set *fds);
 void print_clients(struct client **clients);
 

@@ -14,17 +14,33 @@
 
 #include <unistd.h>
 
-static int handle_client(struct client *client)
+static int end_of_file_detected(char *buffer)
 {
-    char **cmd = my_stwa_separator(client->buffer, "\r\n");
-
-    if (cmd == NULL)
+    if (buffer == NULL)
         return 0;
-    for (int i = 0; cmd[i] != NULL; i++)
-        printf("cmd[%d]: %s\n", i, cmd[i]);
+    for (int i = 0; buffer[i] != '\0'; i++) {
+        if (buffer[i] == '\r' || buffer[i] == '\n')
+            return 1;
+    }
+    return 0;
+}
+
+static int buffer_handling(struct client **clients, int index)
+{
+    char **commands = NULL;
+    char **cmd = NULL;
+
+    if (!end_of_file_detected(clients[index]->buffer))
+        return 0;
+    commands = my_stwa_separator(clients[index]->buffer, "\r\n");
+    if (commands == NULL)
+        return -1;
+    cmd = my_stwa_separator(commands[0], " ");
+    if (cmd == NULL)
+        return -1;
+    command_handling((const char **)cmd, clients, index);
     my_free_array(cmd);
-    free(client->buffer);
-    client->buffer = NULL;
+    my_free_array(commands);
     return 0;
 }
 
@@ -42,7 +58,7 @@ int manage_clients(struct client **clients, fd_set *fds)
             clients[i] = NULL;
             continue;
         }
-        handle_client(clients[i]);
+        buffer_handling(clients, i);
     }
     return 0;
 }
