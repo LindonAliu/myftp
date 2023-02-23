@@ -10,17 +10,27 @@ SRC_ALL		=	handle_list.c		\
 				my_ftp.c			\
 				server.c			\
 				error_handling.c	\
+				commands.c			\
+				buffer_handling.c	\
+				manage_clients.c	\
 
 SRC_NT		=	main.c
 
 CC			:=	gcc
 
-SRC_TEST	=	tests_redirect_output.c
+SRC_TEST	=	tests/* 	\
+				sources/handle_list.c		\
+				sources/client.c			\
+				sources/my_ftp.c			\
+				sources/server.c			\
+				sources/error_handling.c	\
+				sources/commands.c			\
+				sources/buffer_handling.c	\
+				sources/manage_clients.c	\
 
 SRC_EXEC	=	$(SRC_ALL) $(SRC_NT)
 
 OBJ_EXEC	=	$(SRC_EXEC:%.c=obj/build/%.o)
-OBJ_TEST	=	$(SRC_TEST:%.c=obj/tests/%.o) $(SRC_ALL:%.c=obj/debug/%.o)
 
 LIBMY		=	lib/libmy.a
 DEBUGFLAGS	+=
@@ -29,8 +39,8 @@ EXEC		=	myftp
 
 TEST		=	unit_tests
 
-CPPFLAGS	+=	-Wall -Wextra -iquote "include" -g3
-CFLAGS		+=
+CPPFLAGS	+=	-iquote "include"
+CFLAGS		+=	-Wall -Wextra
 LDFLAGS		=	-Llib -lmy
 
 all:	$(EXEC)
@@ -57,8 +67,9 @@ $(EXEC):	$(LIBMY) $(OBJ_EXEC)
 	@$(CC) -o $(EXEC) $(OBJ_EXEC) $(LDFLAGS) \
 		&& printf "\033[0;32mexecutable built\n\033[0;37m"
 
-$(TEST):	$(LIBMY) $(OBJ_TEST)
-	$(CC) -o $(TEST) $(OBJ_TEST) $(LDFLAGS) -lcriterion --coverage
+$(TEST):	CPPFLAGS += -lcriterion --coverage
+$(TEST):	$(LIBMY)
+	$(CC) -o $(TEST) $(SRC_TEST) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS)
 
 $(LIBMY):
 	$(MAKE) $(DEBUGFLAGS) -C lib/my
@@ -69,7 +80,7 @@ clean_cov:
 clean:	clean_cov
 	@$(MAKE) clean -C lib/my
 	@find . -name "*.gcno" -delete
-	@rm -f $(OBJ_EXEC) $(OBJ_TEST)
+	@rm -f $(OBJ_EXEC)
 	@rm -rf obj
 
 fclean: clean

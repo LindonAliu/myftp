@@ -5,22 +5,24 @@
 ** FreeKOSOVO
 */
 
-#include "my_ftp.h"
+#include "server.h"
 
-int set_server(char const *port, char const *path)
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+static int set_server(struct server *server,
+    struct sockaddr_in addr, const char *path)
 {
-    int sfd = socket(AF_INET, SOCK_STREAM, 0);
-    struct sockaddr_in addr = {
-        .sin_family = AF_INET,
-        .sin_port = htons(atoi(port)),
-        .sin_addr = (struct in_addr){.s_addr = htonl(INADDR_ANY)}
-    };
-
-    if (bind(sfd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+    if (bind(server->sfd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
         perror("Error: bind");
         return -1;
     }
-    if (listen(sfd, SOMAXCONN) == -1) {
+    if (listen(server->sfd, SOMAXCONN) == -1) {
         perror("Error: listen");
         return -1;
     }
@@ -28,5 +30,67 @@ int set_server(char const *port, char const *path)
         perror("Error: chdir");
         return -1;
     }
-    return sfd;
+    server->path = strdup(path);
+    if (!server->path)
+        return -1;
+    return 0;
 }
+
+struct server *create_server(int port, const char *path)
+{
+    struct server *server = malloc(sizeof(struct server));
+    struct sockaddr_in addr = {
+        .sin_family = AF_INET,
+        .sin_port = htons(port),
+        .sin_addr = (struct in_addr){.s_addr = htonl(INADDR_ANY)}
+    };
+
+    if (!server)
+        return server;
+    server->clients = malloc(sizeof(struct client *) * 1024);
+    if (server->clients == NULL)
+        return NULL;
+    memset(server->clients, 0, sizeof(struct client *) * 1024);
+    server->sfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server->sfd < 0)
+        return NULL;
+    if (set_server(server, addr, path) < 0)
+        return NULL;
+    return server;
+}
+
+void destroy_server(struct server *server)
+{
+    if (!server)
+        return;
+    for (int i = 0; server->clients[i] != NULL; i++)
+        destroy_client(server->clients[i]);
+    free(server->clients);
+    if (server->path)
+        free(server->path);
+    free(server);
+}
+
+// int set_server(char const *port, char const *path)
+// {
+//     int sfd = socket(AF_INET, SOCK_STREAM, 0);
+//     struct sockaddr_in addr = {
+//         .sin_family = AF_INET,
+//         .sin_port = htons(atoi(port)),
+//         .sin_addr = (struct in_addr){.s_addr = htonl(INADDR_ANY)}
+//     };
+
+//     if (bind(sfd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+//         perror("Error: bind");
+//         return -1;
+//     }
+//     if (listen(sfd, SOMAXCONN) == -1) {
+//         perror("Error: listen");
+//         return -1;
+//     }
+//     if (chdir(path) < 0) {
+//         perror("Error: chdir");
+//         return -1;
+//     }
+//     return sfd;
+// }
