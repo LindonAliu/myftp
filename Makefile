@@ -5,8 +5,7 @@
 ## FreeKOSOVO
 ##
 
-SRC_ALL		=	handle_list.c		\
-				client.c			\
+SRC_ALL		=	client.c			\
 				my_ftp.c			\
 				server.c			\
 				error_handling.c	\
@@ -19,7 +18,6 @@ SRC_NT		=	main.c
 CC			:=	gcc
 
 SRC_TEST	=	tests/* 	\
-				sources/handle_list.c		\
 				sources/client.c			\
 				sources/my_ftp.c			\
 				sources/server.c			\
