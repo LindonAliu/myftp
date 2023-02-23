@@ -18,7 +18,7 @@ struct server {
 
 struct server *create_server(int port, const char *path);
 void destroy_server(struct server *server);
-int manage_clients(struct client **clients, fd_set *fds);
-int command_handling(const char **cmd, struct client **client, int index);
+int manage_clients(struct server *server, fd_set *fds);
+int command_handling(const char **cmd, struct server *server, int index);
 
 #endif /* !SERVER_H_ */

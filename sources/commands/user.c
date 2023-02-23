@@ -5,12 +5,21 @@
 ** FreeKOSOVO
 */
 
-#include "client.h"
-#include "all_lib.h"
+#include "builtins_array.h"
+#include <string.h>
 
-int user(UNUSED const char **cmd, UNUSED struct client **client,
-    UNUSED int index)
+int user(const char **cmd, struct server *server, int index)
 {
-    printf("%s\n", cmd[0]);
+    if (server->clients[index]->a.connected >= 1)
+        return 0;
+    if (cmd[1] == NULL) {
+        dprintf(server->clients[index]->cfd, code_501);
+        return 0;
+    }
+    if (server->clients[index]->a.username != NULL)
+        destroy_account(&server->clients[index]->a);
+    create_account(&server->clients[index]->a, strdup(cmd[1]), NULL, NULL);
+    server->clients[index]->a.connected = 1;
+    dprintf(server->clients[index]->cfd, code_331);
     return 0;
 }

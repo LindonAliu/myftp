@@ -5,12 +5,12 @@
 ** FreeKOSOVO
 */
 
-#include "client.h"
+#include "server.h"
 #include "all_lib.h"
+#include "builtins_array.h"
 
-int help(UNUSED const char **cmd, UNUSED struct client **client,
-    UNUSED int index)
+int help(UNUSED const char **cmd, struct server *server UNUSED,UNUSED int index)
 {
-    printf("%s\n", cmd[0]);
+    dprintf(server->clients[index]->cfd, code_214);
     return 0;
 }

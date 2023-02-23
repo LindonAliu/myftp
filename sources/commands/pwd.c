@@ -5,12 +5,19 @@
 ** FreeKOSOVO
 */
 
-#include "client.h"
+#include "server.h"
 #include "all_lib.h"
+#include "builtins_array.h"
+#include <unistd.h>
 
-int pwd(UNUSED const char **cmd, UNUSED struct client **client,
-    UNUSED int index)
+int pwd(const char **cmd, struct server *server, int index)
 {
-    printf("%s\n", cmd[0]);
+    char *pwd = NULL;
+    if (my_len_array(cmd) != 1) {
+        dprintf(server->clients[index]->cfd, code_501);
+        return 0;
+    }
+    pwd = getcwd(pwd, 0);
+    dprintf(server->clients[index]->cfd, code_257, pwd);
     return 0;
 }

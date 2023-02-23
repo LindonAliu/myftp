@@ -20,6 +20,7 @@ SRC_ALL		= 	commands/cdup.c		\
 				commands/stor.c		\
 				commands/user.c		\
 				client.c			\
+				account.c			\
 				my_ftp.c			\
 				server.c			\
 				error_handling.c	\
@@ -51,6 +52,7 @@ SRC_TEST	=	tests/* 	\
 				sources/error_handling.c	\
 				sources/commands_handling.c	\
 				sources/manage_clients.c	\
+				sources/account.c			\
 
 SRC_EXEC	=	$(SRC_ALL) $(SRC_NT)
 

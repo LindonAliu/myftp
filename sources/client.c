@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "builtins_array.h"
 
 #include <stdio.h> // printf
 
@@ -29,6 +30,7 @@ void destroy_client(struct client *client)
     close(client->cfd);
     if (client->buffer)
         free(client->buffer);
+    destroy_account(&client->a);
     free(client);
 }
 
@@ -54,9 +56,10 @@ void add_client(struct client **clients, int cfd, fd_set *fds)
     clients[i] = malloc(sizeof(struct client));
     clients[i]->cfd = cfd;
     clients[i]->buffer = NULL;
-    clients[i]->connected = 0;
+    clients[i]->a = (struct account){NULL, NULL, NULL, 0};
     clients[i + 1] = NULL;
     FD_SET(cfd, fds);
+    dprintf(cfd, code_220);
 }
 
 void print_clients(struct client **clients)

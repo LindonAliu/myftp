@@ -27,5 +27,9 @@ int error_handling(int ac, char const *av[])
         perror("Error: invalid arguments");
         return -1;
     }
+    if (my_str_isnum(av[1]) == 0) {
+        perror("Error: invalid port");
+        return -1;
+    }
     return 0;
 }

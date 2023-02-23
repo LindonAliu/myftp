@@ -53,7 +53,7 @@ static int handle_ftp(struct server *server)
         if (FD_ISSET(server->sfd, &server_fd))
             add_client(server->clients, check_accept(server->sfd), &server_fd);
         else
-            manage_clients(server->clients, &server_fd);
+            manage_clients(server, &server_fd);
     }
     return 0;
 }
