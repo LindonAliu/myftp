@@ -22,14 +22,20 @@ int pass(const char **cmd, struct server *server, int index)
     char const *correct_password =
         get_password(server->clients[index]->a.username);
 
+    if (my_len_array(cmd) > 2) {
+        dprintf(server->clients[index]->cfd, code_501);
+        return 0;
+    }
     if (server->clients[index]->a.connected == 0) {
         dprintf(server->clients[index]->cfd, code_503);
         return 0;
     }
-    if (cmd[1] == correct_password || strcmp(cmd[1], correct_password) == 0) {
-        server->clients[index]->a.connected = 2;
-        dprintf(server->clients[index]->cfd, code_230);
+    if (!(cmd[1] == correct_password ||
+        strcmp(cmd[1], correct_password) == 0)) {
+        dprintf(server->clients[index]->cfd, code_530);
         return 0;
     }
+    server->clients[index]->a.connected = 2;
+    dprintf(server->clients[index]->cfd, code_230);
     return 0;
 }

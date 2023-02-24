@@ -11,10 +11,11 @@
 
 int retr(const char **cmd, struct server *server, int index)
 {
-    if (my_len_array(cmd) != 1) {
+    if (my_len_array(cmd) != 2) {
         dprintf(server->clients[index]->cfd, code_501);
         return 0;
     }
-    dprintf(server->clients[index]->cfd, code_200);
+    dprintf(server->clients[index]->cfd, code_150);
+    dprintf(server->clients[index]->cfd, code_226);
     return 0;
 }

@@ -11,7 +11,7 @@
 
 int port(const char **cmd, struct server *server, int index)
 {
-    if (my_len_array(cmd) != 1) {
+    if (my_len_array(cmd) != 2) {
         dprintf(server->clients[index]->cfd, code_501);
         return 0;
     }

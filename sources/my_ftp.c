@@ -12,6 +12,13 @@
 
 #include <unistd.h>
 #include <stdio.h>
+#include <signal.h>
+
+static void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+        exit(0);
+}
 
 static int check_select(int nfds, fd_set *readfds, fd_set *writefds)
 {
@@ -66,6 +73,7 @@ int my_ftp(const char *port, const char *path)
 
     if (!server)
         return -1;
+    signal(SIGINT, sig_handler);
     ret = handle_ftp(server);
     destroy_server(server);
     return ret;

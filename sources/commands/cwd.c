@@ -13,7 +13,6 @@
 
 int cwd(const char **cmd, struct server *server, int index)
 {
-    printf("(wd[%d]: %s)\n", index, server->clients[index]->working_dir);
     chdir(server->clients[index]->working_dir);
     if (my_len_array(cmd) != 2) {
         dprintf(server->clients[index]->cfd, code_501);
@@ -30,7 +29,6 @@ int cwd(const char **cmd, struct server *server, int index)
     if (server->clients[index]->working_dir)
         free(server->clients[index]->working_dir);
     server->clients[index]->working_dir = getcwd(NULL, 0);
-    printf("(wd[%d]: %s)\n", index, server->clients[index]->working_dir);
     dprintf(server->clients[index]->cfd, code_250);
     return 0;
 }

@@ -15,6 +15,7 @@ int quit(const char **cmd, struct server *server, int index)
         dprintf(server->clients[index]->cfd, code_501);
         return 0;
     }
+    dprintf(server->clients[index]->cfd, code_221);
     destroy_client(server->clients[index]);
     server->clients[index] = NULL;
     return 0;
