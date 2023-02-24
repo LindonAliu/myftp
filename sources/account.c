@@ -8,12 +8,10 @@
 #include "client.h"
 #include <stdlib.h>
 
-void create_account(struct account *account, char *username,
-    char *password, char *current_dir)
+void create_account(struct account *account, char *username, char *password)
 {
     account->username = username;
     account->password = password;
-    account->current_dir = current_dir;
     account->connected = 0;
 }
 
@@ -23,14 +21,11 @@ void destroy_account(struct account *account)
         free(account->username);
     if (account->password)
         free(account->password);
-    if (account->current_dir)
-        free(account->current_dir);
     account->connected = 0;
 }
 
 void print_account(struct account *account)
 {
-    printf("username: %s password: %s current_dir: %s connected: %d\n",
-        account->username, account->password,
-        account->current_dir, account->connected);
+    printf("username: %s password: %s connected: %d\n",
+        account->username, account->password, account->connected);
 }

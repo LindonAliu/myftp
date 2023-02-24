@@ -54,7 +54,8 @@ int manage_clients(struct server *server, fd_set *fds)
             server->clients[i]->buffer = malloc(sizeof(char) * 4096);
             memset(server->clients[i]->buffer, 0, 4096);
         }
-        if (read(server->clients[i]->cfd, server->clients[i]->buffer, 4096) <= 0) {
+        if (read(server->clients[i]->cfd,
+            server->clients[i]->buffer, 4096) <= 0) {
             destroy_client(server->clients[i]);
             server->clients[i] = NULL;
             continue;

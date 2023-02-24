@@ -16,9 +16,13 @@ int user(const char **cmd, struct server *server, int index)
         dprintf(server->clients[index]->cfd, code_501);
         return 0;
     }
+    if (strcmp(cmd[1], "Anonymous") != 0) {
+        dprintf(server->clients[index]->cfd, code_530);
+        return 0;
+    }
     if (server->clients[index]->a.username != NULL)
         destroy_account(&server->clients[index]->a);
-    create_account(&server->clients[index]->a, strdup(cmd[1]), NULL, NULL);
+    create_account(&server->clients[index]->a, strdup(cmd[1]), NULL);
     server->clients[index]->a.connected = 1;
     dprintf(server->clients[index]->cfd, code_331);
     return 0;

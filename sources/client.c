@@ -30,6 +30,8 @@ void destroy_client(struct client *client)
     close(client->cfd);
     if (client->buffer)
         free(client->buffer);
+    if (client->working_dir)
+        free(client->working_dir);
     destroy_account(&client->a);
     free(client);
 }
@@ -43,7 +45,7 @@ void destroy_clients(struct client **clients)
     free(clients);
 }
 
-void add_client(struct client **clients, int cfd, fd_set *fds)
+void add_client(struct client **clients, int cfd, fd_set *fds, const char *path)
 {
     int i = 0;
 
@@ -56,7 +58,8 @@ void add_client(struct client **clients, int cfd, fd_set *fds)
     clients[i] = malloc(sizeof(struct client));
     clients[i]->cfd = cfd;
     clients[i]->buffer = NULL;
-    clients[i]->a = (struct account){NULL, NULL, NULL, 0};
+    clients[i]->a = (struct account){NULL, NULL, 0};
+    clients[i]->working_dir = strdup(path);
     clients[i + 1] = NULL;
     FD_SET(cfd, fds);
     dprintf(cfd, code_220);

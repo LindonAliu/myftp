@@ -30,9 +30,7 @@ static int set_server(struct server *server,
         perror("Error: chdir");
         return -1;
     }
-    server->path = strdup(path);
-    if (!server->path)
-        return -1;
+    server->path = getcwd(NULL, 0);
     return 0;
 }
 

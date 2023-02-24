@@ -7,9 +7,15 @@
 
 #include "server.h"
 #include "all_lib.h"
+#include "builtins_array.h"
 
-int pasv(UNUSED const char **cmd, UNUSED struct server *server, UNUSED int index)
+int pasv(const char **cmd, struct server *server,
+    int index)
 {
-    printf("%s\n", cmd[0]);
+    if (my_len_array(cmd) != 1) {
+        dprintf(server->clients[index]->cfd, code_501);
+        return 0;
+    }
+    dprintf(server->clients[index]->cfd, code_227);
     return 0;
 }

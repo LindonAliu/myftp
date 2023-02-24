@@ -7,9 +7,18 @@
 
 #include "server.h"
 #include "all_lib.h"
+#include "builtins_array.h"
 
-int dele(UNUSED const char **cmd, UNUSED struct server *server, UNUSED int index)
+int dele(const char **cmd, struct server *server, int index)
 {
-    printf("%s\n", cmd[0]);
+    if (my_len_array(cmd) != 2) {
+        dprintf(server->clients[index]->cfd, code_501);
+        return 0;
+    }
+    if (remove(cmd[1]) == -1) {
+        dprintf(server->clients[index]->cfd, code_550);
+        return 0;
+    }
+    dprintf(server->clients[index]->cfd, code_250);
     return 0;
 }
