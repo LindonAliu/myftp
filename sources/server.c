@@ -37,23 +37,23 @@ static int set_server(struct server *server,
 struct server *create_server(int port, const char *path)
 {
     struct server *server = malloc(sizeof(struct server));
-    struct sockaddr_in addr = {
-        .sin_family = AF_INET,
-        .sin_port = htons(port),
-        .sin_addr = (struct in_addr){.s_addr = htonl(INADDR_ANY)}
-    };
+    struct sockaddr_in addr = { .sin_family = AF_INET, .sin_port = htons(port),
+        .sin_addr = (struct in_addr){.s_addr = htonl(INADDR_ANY)} };
 
     if (!server)
         return server;
-    server->clients = malloc(sizeof(struct client *) * 1024);
+    server->clients = malloc(sizeof(struct client *) * FD_SETSIZE);
     if (server->clients == NULL)
         return NULL;
-    memset(server->clients, 0, sizeof(struct client *) * 1024);
+    memset(server->clients, 0, sizeof(struct client *) * FD_SETSIZE);
     server->sfd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->sfd < 0)
         return NULL;
-    if (set_server(server, addr, path) < 0)
+    if (set_server(server, addr, path) < 0) {
+        free(server->clients);
+        free(server);
         return NULL;
+    }
     return server;
 }
 

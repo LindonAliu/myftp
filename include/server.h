@@ -9,6 +9,7 @@
     #define SERVER_H_
 
     #include "client.h"
+    #define MAX_BUFFER 4096
 
 struct server {
     int sfd;

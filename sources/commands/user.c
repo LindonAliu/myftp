@@ -10,14 +10,8 @@
 
 int user(const char **cmd, struct server *server, int index)
 {
-    if (server->clients[index]->a.connected >= 1)
-        return 0;
     if (cmd[1] == NULL) {
         dprintf(server->clients[index]->cfd, code_501);
-        return 0;
-    }
-    if (strcmp(cmd[1], "Anonymous") != 0) {
-        dprintf(server->clients[index]->cfd, code_530);
         return 0;
     }
     if (server->clients[index]->a.username != NULL)

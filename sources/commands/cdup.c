@@ -18,6 +18,10 @@ int cdup(const char **cmd, struct server *server, int index)
         dprintf(server->clients[index]->cfd, code_501);
         return 0;
     }
+    if (server->clients[index]->a.connected < 2) {
+        dprintf(server->clients[index]->cfd, code_530);
+        return 0;
+    }
     if (chdir(server->path) == -1) {
         dprintf(server->clients[index]->cfd, code_550);
         return 0;

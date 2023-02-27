@@ -9,7 +9,7 @@
 #include "all_lib.h"
 #include "builtins_array.h"
 
-int help(UNUSED const char **cmd, struct server *server UNUSED,UNUSED int index)
+int help(const char **cmd, struct server *server, int index)
 {
     if (my_len_array(cmd) > 2) {
         dprintf(server->clients[index]->cfd, code_501);

@@ -11,6 +11,8 @@
     #include "all_lib.h"
     #include "server.h"
 
+    #define ACCOUNT_FILE "accounts.txt"
+
 int error_handling(int ac, char const *av[]);
 int my_ftp(const char *port, const char *path);
 

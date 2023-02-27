@@ -15,6 +15,10 @@ int stor(const char **cmd, struct server *server, int index)
         dprintf(server->clients[index]->cfd, code_501);
         return 0;
     }
+    if (server->clients[index]->a.connected < 2) {
+        dprintf(server->clients[index]->cfd, code_530);
+        return 0;
+    }
     dprintf(server->clients[index]->cfd, code_150);
     dprintf(server->clients[index]->cfd, code_226);
     return 0;
