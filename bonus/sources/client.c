@@ -19,8 +19,10 @@ void refresh_client(struct client **clients, fd_set *fds, int *sfd)
         return;
     FD_ZERO(fds);
     FD_SET(*sfd, fds);
-    for (int i = 0; clients[i] != NULL; i++)
-        FD_SET(clients[i]->cfd, fds);
+    for (int i = 0; i < FD_SETSIZE; i++) {
+        if (clients[i] != NULL)
+            FD_SET(clients[i]->cfd, fds);
+    }
 }
 
 void destroy_client(struct client *client)

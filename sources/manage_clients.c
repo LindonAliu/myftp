@@ -47,15 +47,17 @@ static int buffer_handling(struct server *server, int index)
 
 int manage_clients(struct server *server, fd_set *fds)
 {
-    for (int i = 0; server->clients[i] != NULL; i++) {
-        if (!FD_ISSET(server->clients[i]->cfd, fds))
+    FILE *f = NULL;
+    size_t n = 0;
+
+    for (int i = 0; i < FD_SETSIZE; i++) {
+        if (server->clients[i] == NULL ||
+            !FD_ISSET(server->clients[i]->cfd, fds))
             continue;
-        if (server->clients[i]->buffer == NULL) {
-            server->clients[i]->buffer = malloc(sizeof(char) * MAX_BUFFER);
-            memset(server->clients[i]->buffer, 0, MAX_BUFFER);
-        }
-        if (read(server->clients[i]->cfd,
-            server->clients[i]->buffer, MAX_BUFFER) <= 0) {
+        f = fdopen(server->clients[i]->cfd, "r");
+        if (f == NULL)
+            continue;
+        if (getline(&server->clients[i]->buffer, &n, f) <= 0) {
             destroy_client(server->clients[i]);
             server->clients[i] = NULL;
             continue;
