@@ -13,15 +13,24 @@
 
 static struct account get_account(char *username)
 {
+    char *file = my_file_in_str(ACCOUNT_FILE);
+    char **accounts = my_stwa_separator(file, "\n");
+    char **account = NULL;
     struct account a = {NULL, NULL, 0};
 
-    if (username == NULL)
-        return a;
-    if (strcmp(username, "Anonymous") == 0) {
-        a.username = strdup("Anonymous");
-        a.password = strdup("");
-        a.connected = 2;
+    free(file);
+    for (int i = 0; accounts[i] != NULL; i++) {
+        account = my_stwa_separator(accounts[i], ":");
+        if (strcmp(account[0], username) == 0) {
+            create_account(&a,
+                account[0] == NULL ? NULL : strdup(account[0]),
+                account[1] == NULL ? NULL : strdup(account[1]));
+            my_free_array(account);
+            break;
+        }
+        my_free_array(account);
     }
+    my_free_array(accounts);
     return a;
 }
 
