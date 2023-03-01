@@ -33,7 +33,7 @@ static int buffer_handling(struct server *server, int index)
     if (!end_of_file_detected(server->clients[index]->buffer))
         return 0;
     commands = my_stwa_separator(server->clients[index]->buffer, "\r\n");
-    if (commands == NULL)
+    if (commands == NULL || commands[0] == NULL)
         return -1;
     cmd = my_stwa_separator(commands[0], " ");
     if (cmd == NULL)
@@ -47,17 +47,16 @@ static int buffer_handling(struct server *server, int index)
 
 int manage_clients(struct server *server, fd_set *fds)
 {
-    FILE *f = NULL;
-    size_t n = 0;
-
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (server->clients[i] == NULL ||
             !FD_ISSET(server->clients[i]->cfd, fds))
             continue;
-        f = fdopen(server->clients[i]->cfd, "r");
-        if (f == NULL)
-            continue;
-        if (getline(&server->clients[i]->buffer, &n, f) <= 0) {
+        if (server->clients[i]->buffer == NULL) {
+            server->clients[i]->buffer = malloc(sizeof(char) * 4096);
+            memset(server->clients[i]->buffer, 0, 4096);
+        }
+        if (read(server->clients[i]->cfd, server->clients[i]->buffer,
+            4096) <= 0) {
             destroy_client(server->clients[i]);
             server->clients[i] = NULL;
             continue;
