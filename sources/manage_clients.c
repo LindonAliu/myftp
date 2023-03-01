@@ -39,7 +39,7 @@ static int buffer_handling(struct server *server, int index)
     if (cmd == NULL)
         return -1;
     my_free_array(commands);
-    if (command_handling((const char **)cmd, server, index) == -1)
+    if (command_handling((const char **)cmd, server, index) < 0)
         dprintf(server->clients[index]->cfd, code_500);
     my_free_array(cmd);
     return 0;
@@ -55,8 +55,8 @@ int manage_clients(struct server *server, fd_set *fds)
             server->clients[i]->buffer = malloc(sizeof(char) * 4096);
             memset(server->clients[i]->buffer, 0, 4096);
         }
-        if (read(server->clients[i]->cfd, server->clients[i]->buffer,
-            4096) <= 0) {
+        if (read(server->clients[i]->cfd,
+                server->clients[i]->buffer, MAX_BUFFER) <= 0) {
             destroy_client(server->clients[i]);
             server->clients[i] = NULL;
             continue;

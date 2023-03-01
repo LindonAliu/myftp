@@ -25,7 +25,8 @@ static struct account get_account(char *username)
     return a;
 }
 
-static int error_handling_pass(const char **cmd, struct server *server, int index)
+static int error_handling_pass(const char **cmd,
+    struct server *server, int index)
 {
     if (my_len_array(cmd) > 2) {
         dprintf(server->clients[index]->cfd, code_501);
@@ -48,7 +49,7 @@ int pass(const char **cmd, struct server *server, int index)
         return 0;
     account = get_account(server->clients[index]->a.username);
     diff = strcmp(cmd[1] == NULL ? "" : cmd[1],
-                  account.password == NULL ? "" : account.password);
+        account.password == NULL ? "" : account.password);
     if (account.username == NULL || diff != 0) {
         destroy_account(&account);
         dprintf(server->clients[index]->cfd, code_530);
