@@ -39,7 +39,8 @@ int cwd(const char **cmd, struct server *server, int index)
     }
     new_path = getcwd(NULL, 0);
     if (strncmp(new_path, server->path, strlen(server->path)) != 0) {
-        dprintf(server->clients[index]->cfd, code_550);
+        dprintf(server->clients[index]->cfd, code_250);
+        free(new_path);
         return 0;
     }
     if (server->clients[index]->working_dir)
