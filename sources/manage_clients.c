@@ -13,15 +13,14 @@
 #include <stdio.h>
 
 #include <unistd.h>
+#include <stdio.h>
 
 static int end_of_file_detected(char *buffer)
 {
     if (buffer == NULL)
         return 0;
-    for (int i = 0; buffer[i] != '\0'; i++) {
-        if (buffer[i] == '\r' || buffer[i] == '\n')
-            return 1;
-    }
+    if (strstr(buffer, "\r\n") != NULL)
+        return 1;
     return 0;
 }
 
@@ -45,23 +44,39 @@ static int buffer_handling(struct server *server, int index)
     return 0;
 }
 
-int manage_clients(struct server *server, fd_set *fds)
+static int client_is_readable(struct server *server, int index, fd_set *fds)
 {
+    if (server->clients[index] == NULL ||
+        !FD_ISSET(server->clients[index]->cfd, fds))
+        return 0;
+    return 1;
+}
+
+static void destroy_buffer(struct server *server, int index)
+{
+    if (server->clients[index] == NULL)
+        return;
+    if (server->clients[index]->buffer != NULL)
+        free(server->clients[index]->buffer);
+    server->clients[index]->buffer = NULL;
+}
+
+void manage_clients(struct server *server, fd_set *fds)
+{
+    size_t size = 0;
+    int len = 0;
+
     for (int i = 0; i < FD_SETSIZE; i++) {
-        if (server->clients[i] == NULL ||
-            !FD_ISSET(server->clients[i]->cfd, fds))
+        if (!client_is_readable(server, i, fds))
             continue;
-        if (server->clients[i]->buffer == NULL) {
-            server->clients[i]->buffer = malloc(sizeof(char) * MAX_BUFFER);
-            memset(server->clients[i]->buffer, 0, MAX_BUFFER);
-        }
-        if (read(server->clients[i]->cfd,
-                server->clients[i]->buffer, MAX_BUFFER) <= 0) {
+        len = getline(&server->clients[i]->buffer, &size, server->clients[i]->stream);
+        if (len < 0) {
             destroy_client(server->clients[i]);
             server->clients[i] = NULL;
             continue;
         }
+        server->clients[i]->buffer[size - 1] = '\0';
         buffer_handling(server, i);
+        destroy_buffer(server, i);
     }
-    return 0;
 }

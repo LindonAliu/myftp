@@ -21,6 +21,7 @@ struct client {
     struct account a;
     char *buffer;
     char *working_dir;
+    FILE *stream;
     int cfd;
 };
 

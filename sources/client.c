@@ -30,6 +30,8 @@ void destroy_client(struct client *client)
     close(client->cfd);
     if (client->buffer)
         free(client->buffer);
+    if (client->stream)
+        fclose(client->stream);
     if (client->working_dir)
         free(client->working_dir);
     destroy_account(&client->a);
@@ -40,8 +42,9 @@ void destroy_clients(struct client **clients)
 {
     if (!clients)
         return;
-    for (int i = 0; clients[i] != NULL; i++)
-        destroy_client(clients[i]);
+    for (int i = 0; i < FD_SETSIZE; i++)
+        if (clients[i])
+            destroy_client(clients[i]);
     free(clients);
 }
 
@@ -60,7 +63,7 @@ void add_client(struct client **clients, int cfd, fd_set *fds, const char *path)
     clients[i]->buffer = NULL;
     clients[i]->a = (struct account){NULL, NULL, 0};
     clients[i]->working_dir = strdup(path);
-    clients[i + 1] = NULL;
+    clients[i]->stream = fdopen(cfd, "r");
     FD_SET(cfd, fds);
     dprintf(cfd, code_220);
 }
@@ -69,7 +72,8 @@ void print_clients(struct client **clients)
 {
     if (!clients)
         return;
-    for (int i = 0; clients[i] != NULL; i++)
-        printf("(%d)->", clients[i]->cfd);
+    for (int i = 0; i < FD_SETSIZE; i++)
+        if (clients[i])
+            printf("(%d)->", clients[i]->cfd);
     printf("end\n");
 }
