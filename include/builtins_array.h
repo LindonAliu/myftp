@@ -11,25 +11,28 @@
     #include "server.h"
     #define UNUSED __attribute__((unused))
 
+typedef int builtin_func_t (const char **cmd,
+    struct server *server, int index);
+
 struct builtin {
     char *name;
     int (*func)(const char **cmd, struct server *server, int index);
 };
 
-int user(const char **cmd, struct server *server, int index);
-int pass(const char **cmd, struct server *server, int index);
-int cwd(const char **cmd, struct server *server, int index);
-int cdup(const char **cmd, struct server *server, int index);
-int quit(const char **cmd, struct server *server, int index);
-int dele(const char **cmd, struct server *server, int index);
-int pwd(const char **cmd, struct server *server, int index);
-int pasv(const char **cmd, struct server *server, int index);
-int port(const char **cmd, struct server *server, int index);
-int help(const char **cmd, struct server *server, int index);
-int noop(const char **cmd, struct server *server, int index);
-int retr(const char **cmd, struct server *server, int index);
-int stor(const char **cmd, struct server *server, int index);
-int list(const char **cmd, struct server *server, int index);
+builtin_func_t user;
+builtin_func_t pass;
+builtin_func_t cwd;
+builtin_func_t cdup;
+builtin_func_t quit;
+builtin_func_t dele;
+builtin_func_t pwd;
+builtin_func_t pasv;
+builtin_func_t port;
+builtin_func_t help;
+builtin_func_t noop;
+builtin_func_t retr;
+builtin_func_t stor;
+builtin_func_t list;
 
 static const int BUILTINS_ARRAY_SIZE = 14;
 
