@@ -22,31 +22,40 @@ static int error_handling_list(const char **cmd,
         dprintf(server->clients[index]->cfd, code_501);
         return -1;
     }
+    if (server->clients[index]->m.type == NONE) {
+        dprintf(server->clients[index]->cfd, code_425);
+        return -1;
+    }
     return 0;
 }
 
-static int list_dir(const char *path, struct server *server, int index)
+static void print_list_in_fd(int fd, FILE *f)
 {
-    FILE *f = NULL;
     char *line = NULL;
     size_t len = 0;
+
+    while (getline(&line, &len, f) != -1)
+        dprintf(fd, "%s", line);
+    if (line)
+        free(line);
+}
+
+void list_dir(const char *path, struct server *server, int index)
+{
+    FILE *f = NULL;
     char *cmd = my_strcat(strdup("ls -la "), path == NULL ? "" : path);
 
     f = popen(cmd, "r");
-    printf("cmd = %s\n", cmd);
     free(cmd);
     if (f == NULL) {
         dprintf(server->clients[index]->cfd, code_550);
-        return -1;
+        return;
     }
     dprintf(server->clients[index]->cfd, code_150);
-    while (getline(&line, &len, f) != -1)
-        dprintf(server->clients[index]->cfd, "%s", line);
+    print_list_in_fd(server->clients[index]->m.fd, f);
     pclose(f);
-    if (line)
-        free(line);
+    destroy_mode(&server->clients[index]->m);
     dprintf(server->clients[index]->cfd, code_226);
-    return 0;
 }
 
 int list(const char **cmd, struct server *server , int index)
