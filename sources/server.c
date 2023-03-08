@@ -42,10 +42,8 @@ struct server *create_server(int port, const char *path)
 
     if (!server)
         return server;
-    server->clients = malloc(sizeof(struct client *) * FD_SETSIZE);
-    if (server->clients == NULL)
-        return NULL;
-    memset(server->clients, 0, sizeof(struct client *) * FD_SETSIZE);
+    server->port = port;
+    server->clients = calloc(FD_SETSIZE, sizeof(struct client *));
     server->sfd = socket(AF_INET, SOCK_STREAM, 0);
     if (server->sfd < 0)
         return NULL;
