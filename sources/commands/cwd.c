@@ -20,7 +20,7 @@ static int error_handling_cwd(const char **cmd,
         return -1;
     }
     if (my_len_array(cmd) != 2) {
-        dprintf(server->clients[index]->cfd, code_501);
+        dprintf(server->clients[index]->cfd, code_550);
         return -1;
     }
     return 0;
