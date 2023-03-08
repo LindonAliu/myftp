@@ -15,6 +15,7 @@ struct server {
     int sfd;
     struct client **clients;
     char *path;
+    int port;
 };
 
 struct server *create_server(int port, const char *path);

@@ -54,7 +54,7 @@ UNUSED static const char *code_221 =
 UNUSED static const char *code_226 =
     "226 Closing data connection.\r\n";
 UNUSED static const char *code_227 =
-    "227 Entering Passive Mode (h1,h2,h3,h4,p1,p2).\r\n";
+    "227 Entering Passive Mode (127,0,0,1,%d,%d).\r\n";
 UNUSED static const char *code_230 =
     "230 User logged in, proceed.\r\n";
 UNUSED static const char *code_250 =

@@ -34,6 +34,7 @@ void destroy_client(struct client *client)
         fclose(client->stream);
     if (client->working_dir)
         free(client->working_dir);
+    destroy_mode(&client->m);
     destroy_account(&client->a);
     free(client);
 }
@@ -64,6 +65,7 @@ void add_client(struct client **clients, int cfd, fd_set *fds, const char *path)
     clients[i]->a = (struct account){NULL, NULL, 0};
     clients[i]->working_dir = strdup(path);
     clients[i]->stream = fdopen(cfd, "r");
+    clients[i]->m = (struct mode){NONE, -1};
     FD_SET(cfd, fds);
     dprintf(cfd, code_220);
 }

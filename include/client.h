@@ -11,10 +11,19 @@
     #include <sys/select.h>
     #include <stdio.h> // printf
 
+    #define NONE 0
+    #define PASSIVE 1
+    #define ACTIVE 2
+
 struct account {
     char *username;
     char *password;
     int connected;
+};
+
+struct mode {
+    int type;
+    int fd;
 };
 
 struct client {
@@ -23,6 +32,7 @@ struct client {
     char *working_dir;
     FILE *stream;
     int cfd;
+    struct mode m;
 };
 
 //clients
@@ -37,5 +47,8 @@ void print_clients(struct client **clients);
 void create_account(struct account *account, char *username, char *password);
 void destroy_account(struct account *account);
 void print_account(struct account *account);
+
+//mode
+void destroy_mode(struct mode *mode);
 
 #endif /* !CLIENT_H_ */

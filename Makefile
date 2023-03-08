@@ -26,6 +26,7 @@ SRC_ALL		= 	commands/cdup.c		\
 				error_handling.c	\
 				commands_handling.c	\
 				manage_clients.c	\
+				mode.c
 
 SRC_NT		=	main.c
 
@@ -53,6 +54,7 @@ SRC_TEST	=	tests/* 	\
 				sources/commands_handling.c	\
 				sources/manage_clients.c	\
 				sources/account.c			\
+				sources/mode.c
 
 SRC_EXEC	=	$(SRC_ALL) $(SRC_NT)
 
