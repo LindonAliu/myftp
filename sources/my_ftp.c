@@ -14,10 +14,12 @@
 #include <stdio.h>
 #include <signal.h>
 
+int close_ftp = 0;
+
 static void sig_handler(int signo)
 {
     if (signo == SIGINT)
-        exit(0);
+        close_ftp = 1;
 }
 
 static int check_select(int nfds, fd_set *readfds, fd_set *writefds)
@@ -26,7 +28,6 @@ static int check_select(int nfds, fd_set *readfds, fd_set *writefds)
     int ret = select(nfds, readfds, writefds, NULL, &tv);
 
     if (ret < 0) {
-        perror("Error: select");
         return -1;
     }
     return ret;
@@ -50,11 +51,11 @@ static int handle_ftp(struct server *server)
     fd_set server_fd;
     int ret = 0;
 
-    while (1) {
+    while (close_ftp == 0) {
         refresh_client(server->clients, &server_fd, &server->sfd);
         ret = check_select(FD_SETSIZE, &server_fd, NULL);
         if (ret < 0)
-            return -1;
+            break;
         if (ret == 0)
             continue;
         if (FD_ISSET(server->sfd, &server_fd))
