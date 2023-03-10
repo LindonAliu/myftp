@@ -51,16 +51,16 @@ static void free_data(FILE *f, FILE *data, struct mode *m)
     destroy_mode(m);
 }
 
-static int open_files(int fd, const char *path, FILE **f, FILE **data, int cfd)
+static int open_files(int fds[2], const char *path, FILE **f, FILE **data)
 {
-    *data = fdopen(fd, "r");
+    *data = fdopen(fds[1], "r");
     if (*data == NULL) {
-        dprintf(cfd, code_425);
+        dprintf(fds[0], code_425);
         return -1;
     }
     *f = fopen(path, "w");
     if (*f == NULL) {
-        dprintf(cfd, code_550);
+        dprintf(fds[0], code_550);
         return -1;
     }
     return 0;
@@ -71,11 +71,13 @@ int stor(const char **cmd, struct server *server, int index)
     FILE *f = NULL;
     FILE *data = NULL;
     int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    int fds[2];
 
     if (error_handling_stor(cmd, server, index) == -1)
         return 0;
-    if (open_files(fd, cmd[1], &f, &data,
-        server->clients[index]->cfd) == -1 || data == NULL || f == NULL)
+    fds[1] = fd;
+    fds[0] = server->clients[index]->cfd;
+    if (open_files(fds, cmd[1], &f, &data) == -1 || data == NULL || f == NULL)
         return 0;
     print_data_in_stream(f, data);
     free_data(f, data, &server->clients[index]->m);

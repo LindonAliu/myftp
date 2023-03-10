@@ -64,13 +64,12 @@ static void destroy_buffer(struct server *server, int index)
 void manage_clients(struct server *server, fd_set *fds)
 {
     size_t size = 0;
-    int len = 0;
 
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (!client_is_readable(server, i, fds))
             continue;
-        len = getline(&server->clients[i]->buffer, &size, server->clients[i]->stream);
-        if (len < 0) {
+        if (getline(&server->clients[i]->buffer, &size,
+                server->clients[i]->stream) < 0) {
             destroy_client(server->clients[i]);
             server->clients[i] = NULL;
             continue;
