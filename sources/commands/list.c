@@ -47,7 +47,11 @@ void list_dir(const char *path, struct server *server, int index)
 {
     FILE *f = NULL;
     char *cmd = my_strcat(strdup("ls -la "), path == NULL ? "" : path);
-    int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    int fd = server->clients[index]->m.type != ACTIVE ?
+        accept(server->clients[index]->m.sfd, NULL, NULL) :
+        server->clients[index]->m.sfd;
+
+    printf("fd = %d\n", fd);
 
     f = popen(cmd, "r");
     free(cmd);

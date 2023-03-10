@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <string.h>
 
 static int error_handling_stor(const char **cmd,
     struct server *server, int index)
@@ -75,7 +76,9 @@ int stor(const char **cmd, struct server *server, int index)
 
     if (error_handling_stor(cmd, server, index) == -1)
         return 0;
-    fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    fd = server->clients[index]->m.type != ACTIVE ?
+        accept(server->clients[index]->m.sfd, NULL, NULL) :
+        server->clients[index]->m.sfd;
     fds[1] = fd;
     fds[0] = server->clients[index]->cfd;
     if (open_files(fds, cmd[1], &f, &data) == -1 || data == NULL || f == NULL)

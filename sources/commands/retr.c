@@ -49,7 +49,9 @@ int retr(const char **cmd, struct server *server, int index)
 
     if (error_handling_retr(cmd, server, index) == -1)
         return 0;
-    fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    fd = server->clients[index]->m.type != ACTIVE ?
+        accept(server->clients[index]->m.sfd, NULL, NULL) :
+        server->clients[index]->m.sfd;
     dprintf(server->clients[index]->cfd, code_150);
     f = fopen(cmd[1], "r");
     if (f == NULL) {
