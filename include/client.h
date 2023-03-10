@@ -10,6 +10,7 @@
 
     #include <sys/select.h>
     #include <stdio.h> // printf
+    #include <netinet/in.h> // sockaddr_in
 
     #define NONE 0
     #define PASSIVE 1
@@ -24,6 +25,7 @@ struct account {
 struct mode {
     int type;
     int sfd;
+    struct sockaddr_in addr;
 };
 
 struct client {

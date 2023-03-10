@@ -22,5 +22,6 @@ struct server *create_server(int port, const char *path);
 void destroy_server(struct server *server);
 void manage_clients(struct server *server, fd_set *fds);
 int command_handling(const char **cmd, struct server *server, int index);
+int check_connect(struct server *server, int index);
 
 #endif /* !SERVER_H_ */

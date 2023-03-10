@@ -42,6 +42,15 @@ static void print_data_in_fd(int fd, FILE *data)
         free(line);
 }
 
+static void do_retro(int fd, FILE *f, struct server *server, int index)
+{
+    print_data_in_fd(fd, f);
+    pclose(f);
+    close(fd);
+    destroy_mode(&server->clients[index]->m);
+    dprintf(server->clients[index]->cfd, code_226);
+}
+
 int retr(const char **cmd, struct server *server, int index)
 {
     FILE *f = 0;
@@ -51,17 +60,17 @@ int retr(const char **cmd, struct server *server, int index)
         return 0;
     fd = server->clients[index]->m.type != ACTIVE ?
         accept(server->clients[index]->m.sfd, NULL, NULL) :
-        server->clients[index]->m.sfd;
+        check_connect(server, index);
+    if (fd == -1) {
+        dprintf(server->clients[index]->cfd, code_425);
+        return 0;
+    }
     dprintf(server->clients[index]->cfd, code_150);
     f = fopen(cmd[1], "r");
     if (f == NULL) {
         dprintf(server->clients[index]->cfd, code_550);
         return 0;
     }
-    print_data_in_fd(fd, f);
-    pclose(f);
-    close(fd);
-    destroy_mode(&server->clients[index]->m);
-    dprintf(server->clients[index]->cfd, code_226);
+    do_retro(fd, f, server, index);
     return 0;
 }

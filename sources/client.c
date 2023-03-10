@@ -65,7 +65,9 @@ void add_client(struct client **clients, int cfd, fd_set *fds, const char *path)
     clients[i]->a = (struct account){NULL, NULL, 0};
     clients[i]->working_dir = strdup(path);
     clients[i]->stream = fdopen(cfd, "r");
-    clients[i]->m = (struct mode){NONE, -1};
+    clients[i]->m = (struct mode){NONE, -1, (struct sockaddr_in){
+            0
+        }};
     FD_SET(cfd, fds);
     dprintf(cfd, code_220);
 }

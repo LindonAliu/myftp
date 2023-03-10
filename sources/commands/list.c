@@ -43,28 +43,35 @@ static void print_list_in_fd(int fd, FILE *f)
         free(line);
 }
 
+static void do_dir(struct server *server, int index, FILE *f, int fd)
+{
+    dprintf(server->clients[index]->cfd, code_150);
+    print_list_in_fd(fd, f);
+    destroy_mode(&server->clients[index]->m);
+    dprintf(server->clients[index]->cfd, code_226);
+}
+
 void list_dir(const char *path, struct server *server, int index)
 {
     FILE *f = NULL;
     char *cmd = my_strcat(strdup("ls -la "), path == NULL ? "" : path);
     int fd = server->clients[index]->m.type != ACTIVE ?
         accept(server->clients[index]->m.sfd, NULL, NULL) :
-        server->clients[index]->m.sfd;
+        check_connect(server, index);
 
-    printf("fd = %d\n", fd);
-
+    if (fd == -1) {
+        dprintf(server->clients[index]->cfd, code_425);
+        return;
+    }
     f = popen(cmd, "r");
     free(cmd);
     if (f == NULL) {
         dprintf(server->clients[index]->cfd, code_550);
         return;
     }
-    dprintf(server->clients[index]->cfd, code_150);
-    print_list_in_fd(fd, f);
+    do_dir(server, index, f, fd);
     pclose(f);
     close(fd);
-    destroy_mode(&server->clients[index]->m);
-    dprintf(server->clients[index]->cfd, code_226);
 }
 
 int list(const char **cmd, struct server *server , int index)

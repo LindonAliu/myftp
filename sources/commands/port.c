@@ -55,15 +55,14 @@ static int get_port(const char *cmd, struct server *server, int index)
     return port;
 }
 
-static int check_connect(struct server *server, int index,
-                        struct sockaddr *addr)
+int check_connect(struct server *server, int index)
 {
-    if (connect(server->clients[index]->m.sfd, (struct sockaddr *)&addr,
-            sizeof(addr)) < 0) {
-        dprintf(server->clients[index]->cfd, code_425);
+    if (connect(server->clients[index]->m.sfd,
+            (struct sockaddr *)&server->clients[index]->m.addr,
+            sizeof(server->clients[index]->m.addr)) < 0) {
         return -1;
     }
-    return 0;
+    return server->clients[index]->m.sfd;
 }
 
 int port(const char **cmd, struct server *server, int index)
@@ -78,10 +77,9 @@ int port(const char **cmd, struct server *server, int index)
     if (port == -1)
         return 0;
     addr.sin_port = htons(port);
+    server->clients[index]->m.addr = addr;
     server->clients[index]->m.sfd = get_socket(server, index);
     if (server->clients[index]->m.sfd == -1)
-        return 0;
-    if (check_connect(server, index, (struct sockaddr *)&addr) == -1)
         return 0;
     server->clients[index]->m.type = ACTIVE;
     dprintf(server->clients[index]->cfd, code_200);
