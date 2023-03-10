@@ -45,16 +45,17 @@ static void print_data_in_fd(int fd, FILE *data)
 int retr(const char **cmd, struct server *server, int index)
 {
     FILE *f = 0;
-    int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    int fd = 0;
 
     if (error_handling_retr(cmd, server, index) == -1)
         return 0;
+    fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    dprintf(server->clients[index]->cfd, code_150);
     f = fopen(cmd[1], "r");
     if (f == NULL) {
         dprintf(server->clients[index]->cfd, code_550);
         return 0;
     }
-    dprintf(server->clients[index]->cfd, code_150);
     print_data_in_fd(fd, f);
     pclose(f);
     close(fd);

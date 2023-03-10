@@ -36,7 +36,7 @@ static void print_data_in_stream(FILE *stream, FILE *data)
     size_t len = 0;
 
     while (getline(&line, &len, data) != -1) {
-        if (line[0] == '\r')
+        if (strcmp(line, "\r\n") == 0 || strcmp(line, "\n") == 0)
             break;
         fprintf(stream, "%s", line);
     }
@@ -58,7 +58,7 @@ static int open_files(int fds[2], const char *path, FILE **f, FILE **data)
         dprintf(fds[0], code_425);
         return -1;
     }
-    *f = fopen(path, "w");
+    *f = fopen(path, "w+");
     if (*f == NULL) {
         dprintf(fds[0], code_550);
         return -1;
@@ -70,18 +70,19 @@ int stor(const char **cmd, struct server *server, int index)
 {
     FILE *f = NULL;
     FILE *data = NULL;
-    int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+    int fd = 0;
     int fds[2];
 
     if (error_handling_stor(cmd, server, index) == -1)
         return 0;
+    fd = accept(server->clients[index]->m.sfd, NULL, NULL);
     fds[1] = fd;
     fds[0] = server->clients[index]->cfd;
     if (open_files(fds, cmd[1], &f, &data) == -1 || data == NULL || f == NULL)
         return 0;
+    dprintf(server->clients[index]->cfd, code_150);
     print_data_in_stream(f, data);
     free_data(f, data, &server->clients[index]->m);
-    dprintf(server->clients[index]->cfd, code_150);
     dprintf(server->clients[index]->cfd, code_226);
     return 0;
 }
