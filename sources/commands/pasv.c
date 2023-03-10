@@ -62,16 +62,11 @@ static int error_handling_pasv(const char **cmd, struct server *server,
 int pasv(const char **cmd, struct server *server,
     int index)
 {
-    int fd = 0;
-
     if (error_handling_pasv(cmd, server, index) < 0)
         return 0;
     server->clients[index]->m.type = PASSIVE;
-    fd = create_passive_socket(server, index);
-    server->clients[index]->m.fd = accept(fd, NULL, NULL);
-    if (fd < 0) {
+    server->clients[index]->m.sfd = create_passive_socket(server, index);
+    if (server->clients[index]->m.sfd < 0)
         dprintf(server->clients[index]->cfd, code_425);
-        return 0;
-    }
     return 0;
 }

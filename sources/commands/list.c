@@ -10,6 +10,9 @@
 #include "builtins_array.h"
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 static int error_handling_list(const char **cmd,
     struct server *server, int index)
@@ -44,6 +47,7 @@ void list_dir(const char *path, struct server *server, int index)
 {
     FILE *f = NULL;
     char *cmd = my_strcat(strdup("ls -la "), path == NULL ? "" : path);
+    int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
 
     f = popen(cmd, "r");
     free(cmd);
@@ -52,8 +56,9 @@ void list_dir(const char *path, struct server *server, int index)
         return;
     }
     dprintf(server->clients[index]->cfd, code_150);
-    print_list_in_fd(server->clients[index]->m.fd, f);
+    print_list_in_fd(fd, f);
     pclose(f);
+    close(fd);
     destroy_mode(&server->clients[index]->m);
     dprintf(server->clients[index]->cfd, code_226);
 }

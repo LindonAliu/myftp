@@ -14,6 +14,6 @@ void destroy_mode(struct mode *mode)
         return;
     if (mode->type == NONE)
         return;
-    close(mode->fd);
+    close(mode->sfd);
     mode->type = NONE;
 }

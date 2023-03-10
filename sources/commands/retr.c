@@ -9,8 +9,11 @@
 #include "all_lib.h"
 #include "builtins_array.h"
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
-static int error_handling_retro(const char **cmd,
+static int error_handling_retr(const char **cmd,
     struct server *server, int index)
 {
     if (server->clients[index]->a.connected < 2) {
@@ -28,12 +31,12 @@ static int error_handling_retro(const char **cmd,
     return 0;
 }
 
-static void print_data_in_fd(int fd, FILE *f)
+static void print_data_in_fd(int fd, FILE *data)
 {
     char *line = NULL;
     size_t len = 0;
 
-    while (getline(&line, &len, f) != -1)
+    while (getline(&line, &len, data) != -1)
         dprintf(fd, "%s", line);
     if (line)
         free(line);
@@ -42,8 +45,9 @@ static void print_data_in_fd(int fd, FILE *f)
 int retr(const char **cmd, struct server *server, int index)
 {
     FILE *f = 0;
-    
-    if (error_handling_retro(cmd, server, index) == -1)
+    int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+
+    if (error_handling_retr(cmd, server, index) == -1)
         return 0;
     f = fopen(cmd[1], "r");
     if (f == NULL) {
@@ -51,8 +55,9 @@ int retr(const char **cmd, struct server *server, int index)
         return 0;
     }
     dprintf(server->clients[index]->cfd, code_150);
-    print_data_in_fd(server->clients[index]->m.fd, f);
+    print_data_in_fd(fd, f);
     pclose(f);
+    close(fd);
     destroy_mode(&server->clients[index]->m);
     dprintf(server->clients[index]->cfd, code_226);
     return 0;

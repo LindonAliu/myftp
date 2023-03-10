@@ -8,6 +8,9 @@
 #include "server.h"
 #include "all_lib.h"
 #include "builtins_array.h"
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 static int error_handling_stor(const char **cmd,
     struct server *server, int index)
@@ -27,10 +30,55 @@ static int error_handling_stor(const char **cmd,
     return 0;
 }
 
+static void print_data_in_stream(FILE *stream, FILE *data)
+{
+    char *line = NULL;
+    size_t len = 0;
+
+    while (getline(&line, &len, data) != -1) {
+        if (line[0] == '\r')
+            break;
+        fprintf(stream, "%s", line);
+    }
+    if (line)
+        free(line);
+}
+
+static void free_data(FILE *f, FILE *data, struct mode *m)
+{
+    fclose(f);
+    fclose(data);
+    destroy_mode(m);
+}
+
+static int open_files(int fd, const char *path, FILE **f, FILE **data, int cfd)
+{
+    *data = fdopen(fd, "r");
+    if (*data == NULL) {
+        dprintf(cfd, code_425);
+        return -1;
+    }
+    *f = fopen(path, "w");
+    if (*f == NULL) {
+        dprintf(cfd, code_550);
+        return -1;
+    }
+    return 0;
+}
+
 int stor(const char **cmd, struct server *server, int index)
 {
+    FILE *f = NULL;
+    FILE *data = NULL;
+    int fd = accept(server->clients[index]->m.sfd, NULL, NULL);
+
     if (error_handling_stor(cmd, server, index) == -1)
-        return -1;
+        return 0;
+    if (open_files(fd, cmd[1], &f, &data,
+        server->clients[index]->cfd) == -1 || data == NULL || f == NULL)
+        return 0;
+    print_data_in_stream(f, data);
+    free_data(f, data, &server->clients[index]->m);
     dprintf(server->clients[index]->cfd, code_150);
     dprintf(server->clients[index]->cfd, code_226);
     return 0;

@@ -23,7 +23,7 @@ struct account {
 
 struct mode {
     int type;
-    int fd;
+    int sfd;
 };
 
 struct client {
