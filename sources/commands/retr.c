@@ -5,13 +5,17 @@
 ** FreeKOSOVO
 */
 
+#include "builtins_array.h"
 #include "server.h"
 #include "all_lib.h"
-#include "builtins_array.h"
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 static int error_handling_retr(const char **cmd,
     struct server *server, int index)
@@ -31,21 +35,22 @@ static int error_handling_retr(const char **cmd,
     return 0;
 }
 
-static void print_data_in_fd(int fd, FILE *data)
+static void print_data_in_fd(int fd, int fd_data)
 {
-    char *line = NULL;
-    size_t len = 0;
+    size_t size = 0;
 
-    while (getline(&line, &len, data) != -1)
-        dprintf(fd, "%s", line);
-    if (line)
-        free(line);
+    while (read(fd_data, &size, sizeof(size_t)) > 0)
+        write(fd, &size, sizeof(size_t));
 }
 
-static void do_retro(int fd, FILE *f, struct server *server, int index)
+static void do_retr(int fd, int fd_data, struct server *server, int index)
 {
-    print_data_in_fd(fd, f);
-    pclose(f);
+    if (fd_data == -1) {
+        dprintf(server->clients[index]->cfd, code_550);
+        return;
+    }
+    print_data_in_fd(fd, fd_data);
+    close(fd_data);
     close(fd);
     destroy_mode(&server->clients[index]->m);
     dprintf(server->clients[index]->cfd, code_226);
@@ -53,8 +58,9 @@ static void do_retro(int fd, FILE *f, struct server *server, int index)
 
 int retr(const char **cmd, struct server *server, int index)
 {
-    FILE *f = 0;
+    int fd_data = 0;
     int fd = 0;
+    char *path = NULL;
 
     if (error_handling_retr(cmd, server, index) == -1)
         return 0;
@@ -66,11 +72,9 @@ int retr(const char **cmd, struct server *server, int index)
         return 0;
     }
     dprintf(server->clients[index]->cfd, code_150);
-    f = fopen(cmd[1], "r");
-    if (f == NULL) {
-        dprintf(server->clients[index]->cfd, code_550);
-        return 0;
-    }
-    do_retro(fd, f, server, index);
+    asprintf(&path, "%s/%s", server->clients[index]->working_dir, cmd[1]);
+    fd_data = open(path, O_RDONLY);
+    free(path);
+    do_retr(fd, fd_data, server, index);
     return 0;
 }

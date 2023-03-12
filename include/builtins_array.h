@@ -8,8 +8,10 @@
 #ifndef BUILTINS_ARRAY_H_
     #define BUILTINS_ARRAY_H_
 
-    #include "server.h"
     #define UNUSED __attribute__((unused))
+    #define _GNU_SOURCE
+    #include "server.h"
+    #include <stdio.h>
 
 typedef int builtin_func_t (const char **cmd,
     struct server *server, int index);
